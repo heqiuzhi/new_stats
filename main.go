@@ -17,13 +17,13 @@ import (
 
 func main() {
 
-	demFileName := decompressBzip2ToDemFile("C:/2545299883.dem.bz2")
-	textAGame(demFileName)
+	//demFileName := decompressBzip2ToDemFile("C:/2545299883.dem.bz2")
+	//textAGame(demFileName)
 	//textAGame("C:/TI6/2545101126.dem")
 
 	//writeToDB("root:123456@/dota2_new_stats?charset=utf8&parseTime=True&loc=Local", "C:/TI6/")
 	//writeToDB("root:123456@/dota2_new_stats_for_cn?charset=utf8&parseTime=True&loc=Local", "D:/replays/")
-
+	draw()
 }
 
 func decompressBzip2ToDemFile(bz2FileName string) string {
