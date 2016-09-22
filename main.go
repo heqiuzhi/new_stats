@@ -5,11 +5,13 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
-	"new_stats/dota2"
-	"new_stats/getStats"
+
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/cheuka/dota-parser/dota2"
+	"github.com/cheuka/dota-parser/getStats"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -19,11 +21,11 @@ func main() {
 
 	//demFileName := decompressBzip2ToDemFile("C:/2545299883.dem.bz2")
 	//textAGame(demFileName)
-	//textAGame("C:/TI6/2545101126.dem")
+	textAGame("C:/dota2replay/2655449401.dem")
 
 	//writeToDB("root:123456@/dota2_new_stats?charset=utf8&parseTime=True&loc=Local", "C:/TI6/")
 	//writeToDB("root:123456@/dota2_new_stats_for_cn?charset=utf8&parseTime=True&loc=Local", "D:/replays/")
-	draw()
+	//	draw()
 }
 
 func decompressBzip2ToDemFile(bz2FileName string) string {
@@ -52,7 +54,12 @@ func decompressBzip2ToDemFile(bz2FileName string) string {
 }
 
 func textAGame(fileName string) {
-	allHeroStats, err := getStats.GetStats(fileName)
+	f, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("打开比赛录像失败: %s", err)
+	}
+	defer f.Close()
+	allHeroStats, err := getStats.GetStats(f)
 	if err != nil {
 		log.Fatalf("解析录像失败: %s", err)
 	}
@@ -82,7 +89,12 @@ func writeToDB(dbPath, replayDir string) {
 		aRepaly := replayDir + aFile.Name()
 		matchID, _ := strconv.ParseUint(strings.TrimSuffix(aFile.Name(), ".dem"), 10, 64)
 		log.Printf("正在解析第%d个录像：%d", i+1, matchID)
-		allHeroStats, err := getStats.GetStats(aRepaly)
+		f, err := os.Open(aRepaly)
+		if err != nil {
+			log.Fatalf("打开比赛录像失败: %s", err)
+		}
+		defer f.Close()
+		allHeroStats, err := getStats.GetStats(f)
 		if err != nil {
 			log.Fatalf("解析录像失败: %s", err)
 		}
